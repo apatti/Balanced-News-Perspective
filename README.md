@@ -11,7 +11,7 @@ This repository contains the source code for the Balanced News Perspective App, 
 
 ## Technology Stack:
 - **Large Language Models (LLMs):** To generate diverse perspectives and summaries.
-- **MultiAgents Framework Agno:** To manage and coordinate multiple agents for different tasks.
+- **MultiAgents Framework Agno:** A lightweight library for building multi-modal Agents.
 - **Vector Database Qdrant:** To efficiently store and retrieve vectorized data for fast and accurate searches.
   
 ## Getting Started:
