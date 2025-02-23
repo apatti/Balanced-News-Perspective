@@ -9,9 +9,14 @@ This repository contains the source code for the Balanced News Perspective App, 
 - Stay updated with the latest news while avoiding echo chambers and bias.
 - Valuable tool for debate preparation, providing access to opposing viewpoints and sufficient information to participate effectively.
 
+## Technology Stack:
+- **Large Language Models (LLMs):** To generate diverse perspectives and summaries.
+- **MultiAgents Framework Agno:** To manage and coordinate multiple agents for different tasks.
+- **Vector Database Qdrant:** To efficiently store and retrieve vectorized data for fast and accurate searches.
+  
 ## Getting Started:
 1. Clone the repository.
-2. Install the necessary dependencies.
+2. Install the necessary dependencies by running `uv sync`
 3. Run the app locally or deploy it to your preferred platform.
 
 ## Contributing:
