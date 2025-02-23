@@ -1,0 +1,12 @@
+[project]
+name = "balanced-news-perspective"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "agno>=1.1.4",
+    "openai>=1.64.0",
+    "python-dotenv>=1.0.1",
+    "streamlit>=1.42.2",
+]
