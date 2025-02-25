@@ -9,7 +9,7 @@ class NewsKnowledgeBase:
 
     def getKnowledgeBase(self):
         knowledge_base = WebsiteKnowledgeBase(
-            urls=self.__sources
+            urls=self.__sources,
             vector_db=vector_db,
             max_links=1, #Follow max one link as we are providing news article.
             sources=self.__sources
