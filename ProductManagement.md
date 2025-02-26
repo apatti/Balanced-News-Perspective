@@ -45,7 +45,7 @@ The app will utilize agents to gather and analyze news from various sources, cat
   - **Reasoning:** Provides comprehensive visibility into agent behavior and system performance.
 
 #### Evaluation:
-- **Not used:** Planning to use RAGAS to evaluate the performance of LLM.
+- **Not used:** Was planning to use RAGAS to evaluate the performance of LLM with use of data sources and kb extraction but with project pivot, didnt had a need to use it.
   - **Reasoning:** Ensures content quality and debate balance throughout the generation process.
 
 #### User Interface:
