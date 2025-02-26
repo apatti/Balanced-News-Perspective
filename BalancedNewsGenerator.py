@@ -132,30 +132,30 @@ class BalancedNewsGenerator(Workflow):
                     <title>{leftView.title}</title>
                     <summary>{leftView.summary}</summary>
                     <content>
-                        {"\n".join(leftView.content)}
+                        {'\n'.join(leftView.content)}
                     </content>
                     <sources>
-                        {"\n".join(leftView.urls)}
+                        {'\n'.join(leftView.urls)}
                     </sources>
                 </left>
                 <right>
                     <title>{rightView.title}</title>
                     <summary>{rightView.summary}</summary>
                     <content>
-                        {"\n".join(rightView.content)}
+                        {'\n'.join(rightView.content)}
                     </content>
                     <sources>
-                        {"\n".join(rightView.urls)}
+                        {'\n'.join(rightView.urls)}
                     </sources>
                 </right>
                 <center>
                     <title>{centerView.title}</title>
                     <summary>{centerView.summary}</summary>
                     <content>
-                        {"\n".join(centerView.content)}
+                        {'\n'.join(centerView.content)}
                     </content>
                     <sources>
-                        {"\n".join(centerView.urls)}
+                        {'\n'.join(centerView.urls)}
                     </sources>
                 </center>
             </viewPoints>
@@ -185,7 +185,7 @@ class BalancedNewsGenerator(Workflow):
             </headline>
                                  
             <articles> 
-                {"\n".join([v.content for v in articleContents.values()])}
+                {'\n'.join([v.content for v in articleContents.values()])}
             </articles>
         """)
 
