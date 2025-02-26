@@ -61,10 +61,7 @@ class AgentConsensus():
                 ## Sources
                 {Properly attributed sources with links}
              """),
-            show_tool_calls=True,
             debug_mode=False,
-            tool_call_limit=5,
-            add_references=True
         )
 
 

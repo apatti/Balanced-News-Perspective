@@ -5,7 +5,7 @@ from BalancedNewsGenerator import BalancedNewsGenerator
 from typing import Iterator, Union, Iterable
 from agno.workflow import RunResponse
 from data_models.dataModel import Consensus
-from agno.utils.pprint import pprint_run_response
+from utils.messageFormat import MessageFormat
 import dotenv
 dotenv.load_dotenv()
 
@@ -25,7 +25,7 @@ generate_news = BalancedNewsGenerator(
     )
 )
 
-full_output = ""
+messageFormat = MessageFormat(st)
 with(st.spinner('Consulting experts...')):
     response : Iterator["RunResponse"] = generate_news.run(
             query=headLine,
@@ -36,21 +36,6 @@ with(st.spinner('Consulting experts...')):
         )
     for resp in response:
         with st.expander("Overall Prespective", expanded=True):
-            st.markdown(f"### {resp.content.headline}")
-            st.markdown("#### Introduction:")
-            st.markdown(resp.content.introduction)
-            st.markdown("#### Left-leaning Perspective:")
-            st.markdown(resp.content.left_section)
-            st.markdown("#### Right-leaning Perspective:")
-            st.markdown(resp.content.right_section)
-            st.markdown("#### Center Perspective:")
-            st.markdown(resp.content.center_section)
-            st.markdown("#### Key Takeaways:")
-            for key_takeaway in resp.content.key_takeaways:
-                st.markdown(f"- {key_takeaway}")
-            st.markdown("#### Sources:")
-            for source in resp.content.sources:
-                st.markdown(f"- {source})")
-
+            messageFormat.formatConsensusView(resp.content)
 
 st.success('Analysis complete!')

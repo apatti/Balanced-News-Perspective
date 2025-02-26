@@ -10,6 +10,7 @@ from agents.agentProgress import AgentProgress
 from typing import Dict, Iterator, Optional
 from data_models.dataModel import ViewPoint, ArticleContent, QueryResults,Consensus
 from agno.utils.log import logger
+from utils.messageFormat import MessageFormat
 import json
 
 
@@ -50,7 +51,7 @@ class BalancedNewsGenerator(Workflow):
         use_viewpoint_report: bool = True,
         st = None
     ) -> Iterator[RunResponse]:
-        self.st = st
+        messageFormat = MessageFormat(st)
     
         # Use the cached if use_cache is True
         if use_viewpoint_report:
@@ -66,9 +67,7 @@ class BalancedNewsGenerator(Workflow):
         with(st.spinner('Retrieving latest news articles...')):
             query_results: Optional[QueryResults] = self.get_query_results(query, use_search_cache)
             with st.expander("Retrieved news articles", expanded=False):
-                st.markdown("### Retrieved news articles")
-                for article in query_results['articles']:
-                    st.markdown(f"- [{article['title']}]({article['url']})")
+                messageFormat.formatQueryResults(query_results["articles"])
                 
         logger.debug(f"Query results: {query_results}")
         # If no query_results are found for the topic, end the workflow
@@ -84,9 +83,7 @@ class BalancedNewsGenerator(Workflow):
         with(st.spinner('Extracting content from the news articles...')):
             article_contents: Dict[str, ArticleContent] = self.extract_article_contents(query,query_results, use_content_generator_cache)
             with st.expander("Retrieved article summaries", expanded=False):
-                for article in article_contents.values():
-                    st.markdown(f"- [{article.title}]({article.url})")
-                    st.markdown(f"    - **Summary:** {article.summary}")
+                messageFormat.formatArticleSummaries(article_contents.values())
 
         logger.debug(
             'Extracted the article content!!'
@@ -96,29 +93,17 @@ class BalancedNewsGenerator(Workflow):
             left_view=self.write_view_point(query, article_contents, "left")
             #logger.debug(f"Left View:\n{left_view}")
             with st.expander("Left View", expanded=True):
-                st.markdown(f"### {left_view.title}")
-                st.markdown(f"**Summary:** {left_view.summary}")
-                st.markdown("**Content:**\n")
-                for content in left_view.content:
-                    st.markdown(f"- {content}")
+                messageFormat.formatPerspectiveView(left_view)
                 
         with(st.spinner('Retrieving right prespective...')):
             right_view=self.write_view_point(query, article_contents, "right")
             with st.expander("Right View", expanded=True):
-                st.markdown(f"### {right_view.title}")
-                st.markdown(f"**Summary:** {right_view.summary}")
-                st.markdown("**Content:**\n")
-                for content in right_view.content:
-                    st.markdown(f"- {content}")
+                messageFormat.formatPerspectiveView(right_view)
 
         with(st.spinner('Retrieving center prespective...')):
             center_view=self.write_view_point(query, article_contents, "center")
             with st.expander("Center View", expanded=True):
-                st.markdown(f"### {center_view.title}")
-                st.markdown(f"**Summary:** {center_view.summary}")
-                st.markdown("**Content:**\n")
-                for content in center_view.content:
-                    st.markdown(f"- {content}")
+                messageFormat.formatPerspectiveView(center_view)
         
         
         # Generate final view
@@ -158,11 +143,11 @@ class BalancedNewsGenerator(Workflow):
             viewPoint: str
     ) -> ViewPoint:
         #viewpoint_response={}
-        viewpoint_input = {
-            "query": query,
-            "articles": [v for v in articleContents.values()]
-        }
-        logger.debug(f"Generating viewpoint for {viewPoint}")
+        viewpoint_input = [
+            {"headline": query, "type":"text"},
+            {"articles": [v.content for v in articleContents.values()],"type":"text"}
+        ]
+        logger.debug(f"Generating viewpoint for {viewpoint_input}")
         if viewPoint == "left":
             left_response:RunResponse = self.progress.run(viewpoint_input)
             if(
@@ -175,7 +160,7 @@ class BalancedNewsGenerator(Workflow):
                 #self.st.markdown(left_response.content)
                 return left_response.content
         elif viewPoint == "right":
-            right_response:RunResponse = self.patriot.run(viewpoint_input)
+            right_response:RunResponse = self.patriot.run(query)
             if(
                 right_response is not None
                 and right_response.content is not None

@@ -24,6 +24,9 @@ class AgentProgress():
                 - Maintaining source attribution\
             """),
             instructions=(
+                "You will be provided with headline and a list of news articles on that headline.\n"
+                "Carefully read each article and provide a left-leaning perspective on the headline.\n"
+                "Follow the instructions provided:\n"
                 "1. Content Strategy\n"
                 "   - Craft attention-grabbing headlines.\n"
                 "   - Structure content for engagement\n"
@@ -35,6 +38,7 @@ class AgentProgress():
                 "   - Generate a left-leaning interpretation\n"
                 "3. Source Integration\n"
                 "   - Cite source urls properly\n"
+                "   - Always provide sources, do not make up information or sources.\n"
                 "   - Maintain factual accuracy\n"
                 "4. Digital Optimization \n"
                 "   - Include shareable takeaways\n"
@@ -58,12 +62,6 @@ class AgentProgress():
                 ## Sources
                 {Properly attributed sources with links}
              """),
-             markdown=True,
-            show_tool_calls=True,
-            debug_mode=False,
-            tool_call_limit=5,
-            add_references=True
+            markdown=True,
+            debug_mode=True
     )
-
-
-

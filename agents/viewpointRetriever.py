@@ -44,7 +44,8 @@ class ViewpointRetrieverAgent():
                 "   - Gather social media reactions and public opinions\n"
             ),
             response_model=QueryResults,
-            structured_outputs=True
+            structured_outputs=True,
+            debug_mode=False
         )
 
 
