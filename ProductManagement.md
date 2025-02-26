@@ -55,6 +55,10 @@ The app will utilize agents to gather and analyze news from various sources, cat
 #### Serving and Inference:
 - **Hosted on Hugging Face:** The solution is hosted on Hugging Face for serving and inference.
 
+#### Architecture diagram:
+![WhatsApp Image 2025-02-26 at 01 19 55](https://github.com/user-attachments/assets/2736b739-69df-4064-96aa-8ca5907d431c)
+
+
 ## Task 3: Dealing with the Data
 
 ### Data Sources and External APIs:
@@ -75,9 +79,10 @@ By integrating these agents, the Balanced News Perspective App will provide user
 [Balanced News Perpective](https://huggingface.co/spaces/ashwinpatti/Balanced-News-Perspective-App#balanced-news-perpective)
 
 ## Task 5: Creating a Golden Test Data Set
+Wasn't sure how to create one for this real time use case.
 
 ## Task 6: Fine-Tuning Open-Source Embeddings
-As mentioned above, I had to drop from using RAG and hence the embedding model for mid-term.
+As mentioned above, I had to drop from using RAG and hence there was no need to fine tune a embedding model
 
 ## Task 7:Assessing Performance
 
