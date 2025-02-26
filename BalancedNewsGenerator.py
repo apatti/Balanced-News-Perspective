@@ -123,7 +123,7 @@ class BalancedNewsGenerator(Workflow):
             centerView: str
     ) -> Consensus:
         
-        viewpoint_input = dedent(f"""\
+        viewpoint_input = dedent(f"""
             <headline>
                 {query}
             </headline>
@@ -179,7 +179,7 @@ class BalancedNewsGenerator(Workflow):
             viewPoint: str
     ) -> ViewPoint:
         
-        viewpoint_input = dedent(f"""\
+        viewpoint_input = dedent(f"""
             <headline> 
                 {query}
             </headline>
