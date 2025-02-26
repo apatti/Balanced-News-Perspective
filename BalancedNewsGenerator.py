@@ -122,7 +122,13 @@ class BalancedNewsGenerator(Workflow):
             rightView: str,
             centerView: str
     ) -> Consensus:
-        
+        leftviewContent = '\n'.join(leftView.content)
+        leftviewUrls = '\n'.join(leftView.urls)
+        rightviewContent = '\n'.join(rightView.content)
+        rightviewUrls = '\n'.join(rightView.urls)
+        centerviewContent = '\n'.join(centerView.content)
+        centerviewUrls = '\n'.join(centerView.urls)
+
         viewpoint_input = dedent(f"""
             <headline>
                 {query}
@@ -132,30 +138,30 @@ class BalancedNewsGenerator(Workflow):
                     <title>{leftView.title}</title>
                     <summary>{leftView.summary}</summary>
                     <content>
-                        {'\n'.join(leftView.content)}
+                        {leftviewContent}
                     </content>
                     <sources>
-                        {'\n'.join(leftView.urls)}
+                        {leftviewUrls}
                     </sources>
                 </left>
                 <right>
                     <title>{rightView.title}</title>
                     <summary>{rightView.summary}</summary>
                     <content>
-                        {'\n'.join(rightView.content)}
+                        {rightviewContent}
                     </content>
                     <sources>
-                        {'\n'.join(rightView.urls)}
+                        {rightviewUrls}
                     </sources>
                 </right>
                 <center>
                     <title>{centerView.title}</title>
                     <summary>{centerView.summary}</summary>
                     <content>
-                        {'\n'.join(centerView.content)}
+                        {centerviewContent}
                     </content>
                     <sources>
-                        {'\n'.join(centerView.urls)}
+                        {centerviewUrls}
                     </sources>
                 </center>
             </viewPoints>
@@ -178,14 +184,14 @@ class BalancedNewsGenerator(Workflow):
             articleContents: Dict[str, ArticleContent],
             viewPoint: str
     ) -> ViewPoint:
-        
+        articleContents = '\n'.join([v.content for v in articleContents.values()])
         viewpoint_input = dedent(f"""
             <headline> 
                 {query}
             </headline>
                                  
             <articles> 
-                {'\n'.join([v.content for v in articleContents.values()])}
+                {articleContents}
             </articles>
         """)
 
