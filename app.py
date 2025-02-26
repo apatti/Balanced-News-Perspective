@@ -26,14 +26,15 @@ generate_news = BalancedNewsGenerator(
 )
 
 messageFormat = MessageFormat(st)
-with(st.spinner('Consulting experts...')):
-    response : Iterator["RunResponse"] = generate_news.run(
-            query=headLine,
-            use_search_cache=True,
-            use_content_generator_cache=True,
-            use_viewpoint_report=True,
-            st=st
-        )
+
+response : Iterator["RunResponse"] = generate_news.run(
+        query=headLine,
+        use_search_cache=True,
+        use_content_generator_cache=True,
+        use_viewpoint_report=True,
+        st=st
+    )
+with(st.spinner('Agents at work...')):
     for resp in response:
         with st.expander("Overall Prespective", expanded=True):
             messageFormat.formatConsensusView(resp.content)

@@ -63,5 +63,5 @@ class AgentProgress():
                 {Properly attributed sources with links}
              """),
             markdown=True,
-            debug_mode=True
+            debug_mode=False
     )

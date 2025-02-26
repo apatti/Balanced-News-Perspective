@@ -107,12 +107,13 @@ class BalancedNewsGenerator(Workflow):
         
         
         # Generate final view
-        consensus_report = self.write_final_view(query,left_view,right_view,center_view)
-        #st.markdown(consensus_report)
-        yield RunResponse(
-            content=consensus_report,
-            event=RunEvent.workflow_completed
-        )
+        with(st.spinner('Consulting experts...')):
+            consensus_report = self.write_final_view(query,left_view,right_view,center_view)
+            #st.markdown(consensus_report)
+            yield RunResponse(
+                content=consensus_report,
+                event=RunEvent.workflow_completed
+            )
 
     def write_final_view(
             self,
@@ -121,10 +122,45 @@ class BalancedNewsGenerator(Workflow):
             rightView: str,
             centerView: str
     ) -> Consensus:
-        viewpoint_input = {
-            "query": query,
-            "viewPoints": [leftView, rightView, centerView]
-        }
+        
+        viewpoint_input = dedent(f"""\
+            <headline>
+                {query}
+            </headline>
+            <viewPoints>
+                <left>
+                    <title>{leftView.title}</title>
+                    <summary>{leftView.summary}</summary>
+                    <content>
+                        {"\n".join(leftView.content)}
+                    </content>
+                    <sources>
+                        {"\n".join(leftView.urls)}
+                    </sources>
+                </left>
+                <right>
+                    <title>{rightView.title}</title>
+                    <summary>{rightView.summary}</summary>
+                    <content>
+                        {"\n".join(rightView.content)}
+                    </content>
+                    <sources>
+                        {"\n".join(rightView.urls)}
+                    </sources>
+                </right>
+                <center>
+                    <title>{centerView.title}</title>
+                    <summary>{centerView.summary}</summary>
+                    <content>
+                        {"\n".join(centerView.content)}
+                    </content>
+                    <sources>
+                        {"\n".join(centerView.urls)}
+                    </sources>
+                </center>
+            </viewPoints>
+        """)
+
         #yield self.consensus.run(json.dumps(viewpoint_input, indent=4), stream=True)
         consensus_response = self.consensus.run(viewpoint_input)
         if(
@@ -142,11 +178,17 @@ class BalancedNewsGenerator(Workflow):
             articleContents: Dict[str, ArticleContent],
             viewPoint: str
     ) -> ViewPoint:
-        #viewpoint_response={}
-        viewpoint_input = [
-            {"headline": query, "type":"text"},
-            {"articles": [v.content for v in articleContents.values()],"type":"text"}
-        ]
+        
+        viewpoint_input = dedent(f"""\
+            <headline> 
+                {query}
+            </headline>
+                                 
+            <articles> 
+                {"\n".join([v.content for v in articleContents.values()])}
+            </articles>
+        """)
+
         logger.debug(f"Generating viewpoint for {viewpoint_input}")
         if viewPoint == "left":
             left_response:RunResponse = self.progress.run(viewpoint_input)
@@ -160,7 +202,7 @@ class BalancedNewsGenerator(Workflow):
                 #self.st.markdown(left_response.content)
                 return left_response.content
         elif viewPoint == "right":
-            right_response:RunResponse = self.patriot.run(query)
+            right_response:RunResponse = self.patriot.run(viewpoint_input)
             if(
                 right_response is not None
                 and right_response.content is not None
