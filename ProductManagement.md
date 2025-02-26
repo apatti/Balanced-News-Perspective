@@ -38,6 +38,8 @@ The app will utilize agents to gather and analyze news from various sources, cat
 - **Observability:** Used agno provided built-in monitoring capabilities that track session and performance metrics through app.agno.com.
   - **Reasoning:** Buit-in capability provided by Agno. (Attached screenshots)
   - <img width="1469" alt="Screenshot 2025-02-25 at 7 02 11 PM" src="https://github.com/user-attachments/assets/5586c09d-3ce5-400b-8f31-0005e9f54091" />
+  - <img width="1465" alt="Screenshot 2025-02-25 at 11 13 06 PM" src="https://github.com/user-attachments/assets/1e92ab1e-69d9-45bd-a0fa-ad9611da7755" />
+
 
 - **Custom logging:** Using the logging framework provided by Agno.
   - **Reasoning:** Provides comprehensive visibility into agent behavior and system performance.
