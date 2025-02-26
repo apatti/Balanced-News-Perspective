@@ -8,7 +8,7 @@ from agents.viewpointRetriever import ViewpointRetrieverAgent
 from agents.agentPatriot import AgentPatriot
 from agents.agentProgress import AgentProgress
 from typing import Dict, Iterator, Optional
-from data_models.dataModel import ViewPoint, ArticleContent, QueryResults,Article
+from data_models.dataModel import ViewPoint, ArticleContent, QueryResults,Consensus
 from agno.utils.log import logger
 import json
 
@@ -66,11 +66,11 @@ class BalancedNewsGenerator(Workflow):
         with(st.spinner('Retrieving latest news articles...')):
             query_results: Optional[QueryResults] = self.get_query_results(query, use_search_cache)
             with st.expander("Retrieved news articles", expanded=False):
-                #st.write(query_results["articles"])
-                st.markdown("<br/>".join([f"({a['title']})[{a['url']}]/n" for a in query_results["articles"]]))
-                #st.write([f"({a.title})[{a.url}]<br/>" for a in query_results])
-        
-        logger.info(f"Query results: {query_results}")
+                st.markdown("### Retrieved news articles")
+                for article in query_results['articles']:
+                    st.markdown(f"- [{article['title']}]({article['url']})")
+                
+        logger.debug(f"Query results: {query_results}")
         # If no query_results are found for the topic, end the workflow
         if query_results is None or len(query_results['articles']) == 0:
             yield RunResponse(
@@ -79,38 +79,55 @@ class BalancedNewsGenerator(Workflow):
             )
             return
         
-        logger.info(f"Extracting content from the news articles for: {query}")
+        logger.debug(f"Extracting content from the news articles for: {query}")
         # Extract content from the articles
         with(st.spinner('Extracting content from the news articles...')):
             article_contents: Dict[str, ArticleContent] = self.extract_article_contents(query,query_results, use_content_generator_cache)
             with st.expander("Retrieved article summaries", expanded=False):
-                st.markdown("<br/>".join([f"({a.model_dump()}" for a in article_contents.values()]))
-                #st.write([f"({a.title})[{a.url}]: {a.summary}<br/>" for a in article_contents.values()])
+                for article in article_contents.values():
+                    st.markdown(f"- [{article.title}]({article.url})")
+                    st.markdown(f"    - **Summary:** {article.summary}")
 
-        logger.info(
+        logger.debug(
             'Extracted the article content!!'
         )
         # Generate viewpoints
         with(st.spinner('Retrieving left prespective...')):
             left_view=self.write_view_point(query, article_contents, "left")
-            #logger.info(f"Left View:\n{left_view}")
+            #logger.debug(f"Left View:\n{left_view}")
             with st.expander("Left View", expanded=True):
-                st.markdown(f"###{left_view.title} {left_view.summary} <br/> {left_view.content}")
+                st.markdown(f"### {left_view.title}")
+                st.markdown(f"**Summary:** {left_view.summary}")
+                st.markdown("**Content:**\n")
+                for content in left_view.content:
+                    st.markdown(f"- {content}")
+                
         with(st.spinner('Retrieving right prespective...')):
             right_view=self.write_view_point(query, article_contents, "right")
             with st.expander("Right View", expanded=True):
-                st.markdown(right_view)
+                st.markdown(f"### {right_view.title}")
+                st.markdown(f"**Summary:** {right_view.summary}")
+                st.markdown("**Content:**\n")
+                for content in right_view.content:
+                    st.markdown(f"- {content}")
+
         with(st.spinner('Retrieving center prespective...')):
             center_view=self.write_view_point(query, article_contents, "center")
             with st.expander("Center View", expanded=True):
-                st.markdown(center_view)
+                st.markdown(f"### {center_view.title}")
+                st.markdown(f"**Summary:** {center_view.summary}")
+                st.markdown("**Content:**\n")
+                for content in center_view.content:
+                    st.markdown(f"- {content}")
         
         
-        #logger.info(f"Left View:\n{left_view}")
-        #logger.info(f"Right View:\n{right_view}")
-        #logger.info(f"Center View:\n{center_view}")
         # Generate final view
-        yield from self.write_final_view(query,left_view,right_view,center_view)
+        consensus_report = self.write_final_view(query,left_view,right_view,center_view)
+        #st.markdown(consensus_report)
+        yield RunResponse(
+            content=consensus_report,
+            event=RunEvent.workflow_completed
+        )
 
     def write_final_view(
             self,
@@ -118,14 +135,20 @@ class BalancedNewsGenerator(Workflow):
             leftView: str,
             rightView: str,
             centerView: str
-    ) -> Iterator[RunResponse]:
+    ) -> Consensus:
         viewpoint_input = {
             "query": query,
             "viewPoints": [leftView, rightView, centerView]
         }
         #yield self.consensus.run(json.dumps(viewpoint_input, indent=4), stream=True)
-        yield self.consensus.run(viewpoint_input, stream=True)
-        #self.add_final_view_to_cache(query, self.consensus.run_response.content)
+        consensus_response = self.consensus.run(viewpoint_input)
+        if(
+                consensus_response is not None
+                and consensus_response.content is not None
+                and isinstance(consensus_response.content, Consensus)
+            ):
+            #self.add_final_view_to_cache(query, consensus_response.content)
+            return consensus_response.content
 
 
     def write_view_point(
@@ -139,7 +162,7 @@ class BalancedNewsGenerator(Workflow):
             "query": query,
             "articles": [v for v in articleContents.values()]
         }
-        logger.info(f"Generating viewpoint for {viewPoint}")
+        logger.debug(f"Generating viewpoint for {viewPoint}")
         if viewPoint == "left":
             left_response:RunResponse = self.progress.run(viewpoint_input)
             if(
@@ -148,7 +171,7 @@ class BalancedNewsGenerator(Workflow):
                 and isinstance(left_response.content, ViewPoint)
             ):
                 self.add_left_view_to_cache(query, left_response.content)
-                #logger.info(f"Left View:\n{left_response.content}")
+                #logger.debug(f"Left View:\n{left_response.content}")
                 #self.st.markdown(left_response.content)
                 return left_response.content
         elif viewPoint == "right":
@@ -176,60 +199,60 @@ class BalancedNewsGenerator(Workflow):
             
 
     def get_cached_left_view(self, query: str) -> Optional[ViewPoint]:
-        logger.info("Checking if cached left view exist")
+        logger.debug("Checking if cached left view exist")
         return self.session_state.get("left_view", {}).get(query)
     def add_left_view_to_cache(self, query: str,view: str):
-        logger.info(f"Saving left view results for: {query}")
+        logger.debug(f"Saving left view results for: {query}")
         self.session_state.setdefault("left_view", {})
         self.session_state["left_view"][query] = view.model_dump()
         self.write_to_storage()
     
     def get_cached_right_viewt(self, query: str) -> Optional[ViewPoint]:
-        logger.info("Checking if cached search results exist")
+        logger.debug("Checking if cached search results exist")
         return self.session_state.get("right_view", {}).get(query)
     def add_right_view_to_cache(self, query: str,view: str):
-        logger.info(f"Saving right view results for: {query}")
+        logger.debug(f"Saving right view results for: {query}")
         self.session_state.setdefault("right_view", {})
         self.session_state["right_view"][query] = view.model_dump()
         self.write_to_storage()
     
     def get_cached_center_view(self, query: str) -> Optional[ViewPoint]:
-        logger.info("Checking if cached search results exist")
+        logger.debug("Checking if cached search results exist")
         return self.session_state.get("center_view", {}).get(query)
     def add_center_view_to_cache(self, query: str,view: str):
-        logger.info(f"Saving center view results for: {query}")
+        logger.debug(f"Saving center view results for: {query}")
         self.session_state.setdefault("center_view", {})
         self.session_state["center_view"][query] = view.model_dump()
         self.write_to_storage()
 
     def get_cached_final_view(self, query: str) -> Optional[ViewPoint]:
-        logger.info("Checking if cached search results exist")
+        logger.debug("Checking if cached search results exist")
         return self.session_state.get("final_view", {}).get(query)
     def add_final_view_to_cache(self, query: str,view: str):
-        logger.info(f"Saving final view results for: {query}")
+        logger.debug(f"Saving final view results for: {query}")
         self.session_state.setdefault("final_view", {})
-        logger.info(f"Final View:\n {view}")
-        self.session_state["final_view"][query] = view
+        logger.debug(f"Final View:\n {view}")
+        self.session_state["final_view"][query] = view.model_dump()
         self.write_to_storage()
-        logger.info(f"Saved final view results for: {query}")
+        logger.debug(f"Saved final view results for: {query}")
 
     def get_cached_search_results(self, query: str) -> Optional[QueryResults]:
-        logger.info("Checking if cached search results exist")
+        logger.debug("Checking if cached search results exist")
         return self.session_state.get("query_results", {}).get(query)
 
     def add_search_results_to_cache(self, query: str, query_results: QueryResults):
-        logger.info(f"Saving query results for: {query}")
+        logger.debug(f"Saving query results for: {query}")
         self.session_state.setdefault("query_results", {})
         self.session_state["query_results"][query] = query_results.model_dump()
         self.write_to_storage()
     
 
     def get_cached_article_contents(self, query: str) -> Optional[QueryResults]:
-        logger.info(f"Checking if cached article contents exist for: {query}")
+        logger.debug(f"Checking if cached article contents exist for: {query}")
         return self.session_state.get("extracted_article_contents_results", {}).get(query)
     
     def add_article_contents_to_cache(self, query: str, article_contents: Dict[str, ArticleContent]):
-        logger.info(f"Saving extract article contents for: {query}")
+        logger.debug(f"Saving extract article contents for: {query}")
         self.session_state.setdefault("extracted_article_contents_results", {})
         self.session_state["extracted_article_contents_results"][query] = article_contents
         self.write_to_storage()
@@ -249,7 +272,7 @@ class BalancedNewsGenerator(Workflow):
             and query_response.content is not None 
             and isinstance(query_response.content, QueryResults)
            ):
-            logger.info("Saving query results to cache")
+            logger.debug("Saving query results to cache")
             self.add_search_results_to_cache(query, query_response.content)
             return query_response.content.model_dump() 
 
@@ -259,15 +282,15 @@ class BalancedNewsGenerator(Workflow):
         article_contents: Dict[str,ArticleContent] = {}
 
         if use_content_generator_cache:
-            logger.info(f"Checking if cached article contents exist for: {query}")
+            logger.debug(f"Checking if cached article contents exist for: {query}")
             article_contents_from_cache = self.get_cached_article_contents(query)
             if article_contents_from_cache:
-                logger.info(f"Found: {len(article_contents_from_cache)}")
+                logger.debug(f"Found: {len(article_contents_from_cache)}")
                 return article_contents_from_cache
             
-        logger.info(f"Extracting content from the news articles for: {len(query_results['articles'])}")
+        logger.debug(f"Extracting content from the news articles for: {len(query_results['articles'])}")
         for article in query_results['articles']:
-            logger.info(f"Extracting content for: {article['url']}")
+            logger.debug(f"Extracting content for: {article['url']}")
             if article['url'] in article_contents:
                 continue
             content_response: RunResponse = self.newsContentGenerator.run(article['url'])

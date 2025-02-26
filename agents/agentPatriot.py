@@ -38,6 +38,7 @@ class AgentPatriot():
                 "   - Maintain factual accuracy\n"
                 "4. Digital Optimization\n"
                 "   - Include shareable takeaways\n"
+                "   - Return in html format\n"
             ),
             response_model=ViewPoint,
             structured_outputs=True,

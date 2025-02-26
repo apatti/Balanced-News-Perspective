@@ -1,7 +1,7 @@
 from textwrap import dedent
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
-from data_models.dataModel import ViewPoint
+from data_models.dataModel import Consensus
 
 class AgentConsensus():
     def __init__(self,model="gpt-4o"):
@@ -36,7 +36,7 @@ class AgentConsensus():
                 "4. Digital Optimization 💻\n"
                 "   - Include shareable takeaways\n"
             ),
-            response_model=ViewPoint,
+            response_model=Consensus,
             structured_outputs=True,
             expected_output=dedent("""\
                 # {Viral-Worthy Headline}
@@ -45,13 +45,13 @@ class AgentConsensus():
                 {Engaging hook and context}
 
                 ## {Left-leaning Section}
-                {Key insights and analysis}
+                {Key insights and analysis in bullet points}
                 
                 ## {Right-leaning Section}
-                {Key insights and analysis}
+                {Key insights and analysis in bullet points}
                 
                 ## {Centrist Section}
-                {Key insights and analysis}
+                {Key insights and analysis in bullet points}
 
                 ## Key Takeaways
                 - {Shareable insight 1}
@@ -62,7 +62,7 @@ class AgentConsensus():
                 {Properly attributed sources with links}
              """),
             show_tool_calls=True,
-            debug_mode=True,
+            debug_mode=False,
             tool_call_limit=5,
             add_references=True
         )

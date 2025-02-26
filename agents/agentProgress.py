@@ -36,7 +36,7 @@ class AgentProgress():
                 "3. Source Integration\n"
                 "   - Cite source urls properly\n"
                 "   - Maintain factual accuracy\n"
-                "4. Digital Optimization 💻\n"
+                "4. Digital Optimization \n"
                 "   - Include shareable takeaways\n"
             ),
             response_model=ViewPoint,
