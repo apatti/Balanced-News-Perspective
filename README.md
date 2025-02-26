@@ -24,6 +24,13 @@ This repository contains the source code for the Balanced News Perspective App, 
 2. Install the necessary dependencies by running `uv sync`
 3. Run the app locally or deploy it to your preferred platform.
 
+## About to come:
+1. Ability to share the final report as a pdf.
+2. Ability to share the final report as a social media post.
+3. Chat feature where users can ask more questions.
+4. Fine-tuned embedding model to enhance chatting feature.
+5. A validation agent to validate other agents.
+
 ## Contributing:
 We welcome contributions from the community. Please read the contributing guidelines before submitting a pull request.
 
