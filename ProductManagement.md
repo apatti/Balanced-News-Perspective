@@ -35,6 +35,8 @@ The app will utilize agents to gather and analyze news from various sources, cat
 - **Not used:** Initially used Pinecone vectordb but had to drop it due to rate limitations. Instead, LLMs are used to generate the data and pass it along.
 
 #### Monitoring:
+- **Observability:** Used agno provided built-in monitoring capabilities that track session and performance metrics through app.agno.com.
+  - **Reasoning:** Buit-in capability provided by Agno. 
 - **Custom logging:** Using the logging framework provided by Agno.
   - **Reasoning:** Provides comprehensive visibility into agent behavior and system performance.
 
