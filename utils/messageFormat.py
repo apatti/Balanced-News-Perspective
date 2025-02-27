@@ -39,6 +39,6 @@ class MessageFormat:
             self.st.markdown(f"- {key_takeaway}")
         self.st.markdown("#### Sources:")
         for source in content.sources:
-            self.st.markdown(f"- {source})")
+            self.st.markdown(f"- {source}")
         
         pass
