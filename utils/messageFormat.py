@@ -12,8 +12,12 @@ class MessageFormat:
 
     def formatArticleSummaries(self, articleSummaries):
         for article in articleSummaries:
-            self.st.markdown(f"- [{article.title}]({article.url})")
-            self.st.markdown(f"    - **Summary:** {article.summary}")
+            #TODO: convert to article content if dict
+            title = article["title"] if isinstance(article,dict) else article.title
+            url = article["url"] if isinstance(article,dict) else article.url
+            summary = article["summary"] if isinstance(article,dict) else article.summary
+            self.st.markdown(f"- [{title}]({url})")
+            self.st.markdown(f"    - **Summary:** {summary}")
         pass
 
     def formatPerspectiveView(self,view):
@@ -25,6 +29,9 @@ class MessageFormat:
         pass
 
     def formatConsensusView(self, content):
+        print(content)
+        if isinstance(content, list):
+            content = content[0]
         self.st.markdown(f"### {content.headline}")
         self.st.markdown("#### Introduction:")
         self.st.markdown(content.introduction)
