@@ -185,7 +185,7 @@ class BalancedNewsGenerator(Workflow):
             viewPoint: str,
             use_content_generator_cache: bool = True
     ) -> ViewPoint:
-        contents = list(articleContents.values()
+        contents = list(articleContents.values())
         if len(contents)>0 and isinstance(contents[0], dict):
             #articleContents = list(articleContents.values())[0][0]
             articleContents = '\n'.join([v['content'] for v in contents])
