@@ -89,4 +89,10 @@ As mentioned above, I had to drop from using RAG and hence there was no need to 
 ## Task 8: Loom video:
 [Mid Term demo](https://www.loom.com/share/9eceeb4801bf401b965cd32b12e8ea98?sid=64122305-960e-4e75-b2a0-c016b13f0f38)
 
+## Future enhancements:
+1. Ability to share the final report as a pdf.
+2. Ability to share the final report as a social media post.
+3. Chat feature where users can ask more questions.
+4. Fine-tuned embedding model to enhance chatting feature.
+5. A validation agent to validate other agents.
 
