@@ -126,7 +126,7 @@ Note:
 - **Base Model**: [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2)
 - **Algorithm**: Contrastive Learning
 - **Dataset**: As described in Task 5: Create pairs of similar and dissimilar data, split it into train,val and test datasets.
-- **Loss function**: Contrastive loss function
+- **Loss function**: Contrastive loss function - This loss function directly penalizes the model when similar pairs have embeddings that are far apart and when dissimilar pairs have embeddings that are close together.
 - **Hardware**: Used GPU. Note: on T4 it took around 1 hour (but i had an error in model uploading to Hugging face and hence had to re-run), on A100 it took 20 minutes.
 <img width="1377" alt="Screenshot 2025-03-11 at 2 04 13 AM" src="https://github.com/user-attachments/assets/44e3dab5-4149-4e4d-ae53-abab8d892a1d" />
 <img width="1186" alt="Screenshot 2025-03-11 at 2 04 21 AM" src="https://github.com/user-attachments/assets/42d70a38-068f-45ff-b74a-5afb553ac28a" />
