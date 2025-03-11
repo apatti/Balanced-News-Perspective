@@ -1,0 +1,38 @@
+{
+    "center":[
+        "site:https://politicalwire.com/",
+        "site:https://thehill.com/ -inurl:/social-tags AND -inurl:/tag",
+        "site:https://www.livemint.com/ -inurl:/topic",
+        "site:https://www.ft.com/content",
+        "site:https://www.japantimes.co.jp/",
+        "site:https://wtvbam.com/",
+        "site:https://san.com/ -inurl:/media-miss",
+        "site:https://bnonews.com/",
+        "site:https://ny1.com/"],
+    "left":[
+        "site:https://www.independent.co.uk/",
+        "site:https://asiatimes.com/",
+        "site:https://www.gzeromedia.com/",
+        "site:https://www.cnn.com/",
+        "site:https://japantoday.com/",
+        "site:https://www.cbc.ca/ -inurl:/player",
+        "site:https://www.nbcnews.com/",
+        "site:https://apnews.com/ -inurl:/video",
+        "site:https://deadline.com/",
+        "site:https://www.npr.org/",
+        "site:https://www.usatoday.com/",
+        "site:https://www.rawstory.com/"
+    ],
+    "right":[
+        "site:https://www.republicworld.com/",
+        "site:https://newsaddicts.com/",
+        "site:https://www.theepochtimes.com/",
+        "site:https://americafirstreport.com/",
+        "site:https://trendingpoliticsnews.com/",
+        "site:https://www.wnd.com/",
+        "site:https://www.washingtontimes.com/",
+        "site:https://www.foxnews.com/",
+        "site:https://headlines.americanlookout.com/",
+        "site:https://www.zerohedge.com/"
+    ]
+}

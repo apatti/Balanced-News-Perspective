@@ -22,6 +22,9 @@ class ContentGeneratorAgent():
                 - Maintaining source attribution\
             """),
             instructions=(
+                "You will be provided with a list of news articles.\n"
+                "Carefully read each article and extract contents.\n"
+                "Follow the instructions provided:\n"
                 "1. Content Extraction\n"
                 "   - Extract content from the article.\n"
                 "   - Preserve important quotes and statistics\n"
