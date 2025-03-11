@@ -25,7 +25,7 @@ The app will utilize agents to gather and analyze news from various sources, cat
   - **Reasoning:** Picked a powerful model as we need the LLM to understand and generate different viewpoints.
 
 #### Embedding Model:
-- **[all-mpnet-base-v2_political_view_ft-legal-ft-v0](https://huggingface.co/ashwinpatti/all-mpnet-base-v2_political_view_ft-legal-ft-v0):** A sentence-transformers model finetuned from sentence-transformers/all-mpnet-base-v2. The model would be able to retrieve content based on the political view point.
+- **[all-mpnet-base-v2_political_view_ft-legal-ft-v0](https://huggingface.co/ashwinpatti/all-mpnet-base-v2_political_view_ft-legal-ft-v0):** A sentence-transformers model finetuned from sentence-transformers/all-mpnet-base-v2. The model would be able to retrieve content based on the political view point. Its hosted on [hugging face](https://huggingface.co/ashwinpatti/all-mpnet-base-v2_political_view_ft-legal-ft-v0).
 
 #### Orchestration:
 - **Agno:** A lightweight library for building multi-modal Agents.
@@ -45,8 +45,15 @@ The app will utilize agents to gather and analyze news from various sources, cat
   - **Reasoning:** Provides comprehensive visibility into agent behavior and system performance.
 
 #### Evaluation:
-- **Not used:** Was planning to use RAGAS to evaluate the performance of LLM with use of data sources and kb extraction but with project pivot, didnt had a need to use it.
-  - **Reasoning:** Ensures content quality and debate balance throughout the generation process.
+- **Embedding model evaluation**: Used [EmbeddingSimilarityEvaluator](https://sbert.net/docs/package_reference/sentence_transformer/evaluation.html#embeddingsimilarityevaluator) to evaluate the fine-tuned embedding model.
+  - **Reasoning:** This ensures that political leanings are considered when retrieving relevant content.
+- **EmbeddingSimilarityEvaluator**: It is designed to assess the quality of sentence embeddings by evaluating how well they capture semantic similarity. It measures the degree to which a model's embeddings reflect the actual semantic similarity between pairs of sentences.It compares the similarity scores calculated from the embeddings with known ground truth similarity scores (or labels).
+  - **Input**: The input consists of pairs of sentences or content, ground truth similarity scores for those pairs, and the embedding model to be evaluated.
+  - **Process**: The procedure involves generating embeddings for sentence pairs using the provided model, calculating the similarity between the embeddings (typically using cosine similarity), comparing these calculated similarities with the ground truth similarities, and computing evaluation metrics to quantify the correlation between the calculated and ground truth similarities.
+  - **Output**: The output provides metrics like Spearman's and Pearson's rank correlation, which measures how well the rank order of the calculated similarities aligns with the rank order of the ground truth similarities.
+  
+<img width="1374" alt="Screenshot 2025-03-11 at 2 24 31 AM" src="https://github.com/user-attachments/assets/77447f54-70c1-4edf-9ba8-6eafc7ef0994" />
+
 
 #### User Interface:
 - **Streamlit:** Used for building and sharing data apps.
