@@ -64,6 +64,7 @@ The app will utilize agents to gather and analyze news from various sources, cat
 ### Data Sources and External APIs:
 Initially, I identified around 30 external APIs (10 each from different perspectives) and planned to extract data from these sites based on user requests. Data extraction was intended to be done through DuckDuckGo and Google search tools (15 each to ensure a distribution of data) and then use Pinecone vectordb with semantic chunking to store the data.
 <br/>However, I encountered rate limits imposed by both Google and DuckDuckGo. To avoid getting my IP blacklisted, I pivoted the project to utilize LLMs to generate news articles and then generate the viewpoints.
+I have used the external URLs to generate data for three news headlines for fine-tuning embeddings.
 
 The app has 4 agents:
 1. **ViewpointRetrieverAgent**: Finds relevant news articles covering different perspectives.
@@ -79,7 +80,38 @@ By integrating these agents, the Balanced News Perspective App will provide user
 [Balanced News Perpective](https://huggingface.co/spaces/ashwinpatti/Balanced-News-Perspective-App#balanced-news-perpective)
 
 ## Task 5: Creating a Golden Test Data Set
-Wasn't sure how to create one for this real time use case.
+1. Identify Sources: Select 30 URLs ([News Sources](https://github.com/apatti/Balanced-News-Perspective/blob/main/fineTuning/newSources.json)) from various news media outlets, ensuring an equal representation of perspectives with 10 URLs each from center, left, and right-leaning sources.
+2. Search Topics: Choose three different topics to search across these sites. Extract the relevant data from each URL for these topics.<br/>
+     2.1 Topics: ["Musk influence on trump", "Abortion rights",  "Transgender Rights Advocates Condemn State Legislation Targeting Youth"]
+3. Label Content: Categorize the extracted content based on its perspective (left, right, center). This will help in maintaining a balanced data set.
+4. Compile Records: Combine the labeled content into a single dataset, resulting in 606 labeled records.
+5. Fine-Tune Model: Use this dataset to fine-tune your embedding model, ensuring that it accurately represents the different perspectives.
+
+Note: 
+1. I initially started with 21 topics but had to cut short to 3 due to rate limit restriction by Google.
+2. Topics: [ "Musk influence on trump", 
+                 "Abortion rights",
+                  "Transgender Rights Advocates Condemn State Legislation Targeting Youth",
+                 "Abolition of DEI in federal hiring",
+                 "Termination of Department of education",
+                 "LA Fires",
+                 "Tarrifs",
+                 "Russia influence in USA politics",
+                 "Oil drilling in USA",
+                 "Stopping USAID",
+                 "Gaza occupation by Isreal",
+                 "Religious Freedom Advocates Challenge LGBTQ+ Anti-Discrimination Laws",
+                 "AI would take over our jobs",
+                 "Indians are stealing american jobs",
+                 "Stock Market Sees Volatile Trading Day",
+                 "Global warming",
+                 "Support to Urkaine",
+                 "Tax Cuts for Wealthy",
+                 "Joe Biden presidency",
+                 "Zelenskyy visit to white house"
+                 "Social security"
+                 ]
+ 
 
 ## Task 6: Fine-Tuning Open-Source Embeddings
 As mentioned above, I had to drop from using RAG and hence there was no need to fine tune a embedding model
