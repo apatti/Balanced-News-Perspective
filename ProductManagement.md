@@ -25,7 +25,7 @@ The app will utilize agents to gather and analyze news from various sources, cat
   - **Reasoning:** Picked a powerful model as we need the LLM to understand and generate different viewpoints.
 
 #### Embedding Model:
-- **Not used:** Due to rate limitations imposed by DuckDuckGo and Google search engines, instead, LLMs are used to generate the sources.
+- **[all-mpnet-base-v2_political_view_ft-legal-ft-v0](https://huggingface.co/ashwinpatti/all-mpnet-base-v2_political_view_ft-legal-ft-v0):** A sentence-transformers model finetuned from sentence-transformers/all-mpnet-base-v2. The model would be able to retrieve content based on the political view point.
 
 #### Orchestration:
 - **Agno:** A lightweight library for building multi-modal Agents.
